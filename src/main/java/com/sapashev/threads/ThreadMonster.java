@@ -35,7 +35,6 @@ public class ThreadMonster implements Runnable{
 
     @Override
     public void run () {
-        LOG.info(String.format("ThreadMonster started at %s", LocalTime.now().toString()));
         try {
             monsters.forEach(m -> makeMove(m));
         } catch (Exception e) {
