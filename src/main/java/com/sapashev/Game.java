@@ -46,22 +46,25 @@ public class Game {
         putPlayer(player, board, freecell);
 
         ScheduledExecutorService service = Executors.newScheduledThreadPool(2);
-        service.scheduleAtFixedRate(new ThreadPlayer(player, board, freecell), 1, 200, TimeUnit.MILLISECONDS);
-        service.scheduleAtFixedRate(new ThreadMonster(board, monsters,repeatPeriod, freecell),1,200, TimeUnit.MILLISECONDS);
+        ScheduledFuture<?> futurePlayer = service.scheduleAtFixedRate(new ThreadPlayer(player, board, freecell), 1, 100, TimeUnit.MILLISECONDS);
+        ScheduledFuture<?> futureMonster = service.scheduleAtFixedRate(new ThreadMonster(board, monsters,repeatPeriod, freecell),1,100, TimeUnit.MILLISECONDS);
 
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {
             LOG.error(String.format("InterruptedException occurred at %s", LocalTime.now()),e);
         }
+        futurePlayer.cancel(false);
+        futureMonster.cancel(false);
+        service.shutdownNow();
 
-        service.shutdown();
+/*        service.shutdown();
         try {
             service.awaitTermination(5, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             LOG.error(String.format("InterruptedException occurred at %s", LocalTime.now()),e);
         }
-        service.shutdownNow();
+        service.shutdownNow();*/
     }
 
     /**
