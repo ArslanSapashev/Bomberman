@@ -57,14 +57,6 @@ public class Game {
         futurePlayer.cancel(false);
         futureMonster.cancel(false);
         service.shutdownNow();
-
-/*        service.shutdown();
-        try {
-            service.awaitTermination(5, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            LOG.error(String.format("InterruptedException occurred at %s", LocalTime.now()),e);
-        }
-        service.shutdownNow();*/
     }
 
     /**
