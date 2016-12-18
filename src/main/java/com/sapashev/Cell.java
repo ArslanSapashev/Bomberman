@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Describes each cell of the game board.
  * cell - cell on a playground
- * degree - describes proximity to the cell Type.PLAYER.
+ * degree - determines proximity to the cell Type.PLAYER.
  * @author Arslan Sapashev
  * @since 15.12.2016
  * @version 1.0

@@ -4,8 +4,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,10 +36,19 @@ public class ThreadMonster implements Runnable{
     @Override
     public void run () {
         LOG.info(String.format("ThreadMonster started at %s", LocalTime.now().toString()));
-        monsters.forEach(m->makeMove(m));
+        monsters.forEach(m -> makeMove(m));
     }
 
 
+    /**
+     * Tries to make next move, chasing the player.
+     * Each cell has degree field which describes proximity to the player current location.
+     * Each monster has a stuckTime field - if monster hasn't been stuck, it's value = LocalTime.MIN,
+     * otherwise this field indicates time when monster tried to move, but failed + repeatPeriod.
+     * If current time is after (greater than) stuckTime, this mean that monster can move to the new cell
+     * otherwise it repeat attempts to get previously failed cell.
+     * @param monster - monster that should make move.
+     */
     void makeMove(Monster monster){
         if(LocalTime.now().isAfter(monster.getStuckTime())){          //If repeat period exceeded, choose next cell.
             makeNewMove(monster);
@@ -51,8 +58,9 @@ public class ThreadMonster implements Runnable{
     }
 
     /**
-     * Tries to move monster to the new cell.
-     * @param monster
+     * Tries to move monster to the new cell. If succeeded swaps the cells, otherwise sets monster's stuckTime and
+     * cell to which it has tried to move as failed cell.
+     * @param monster - monster to move
      */
     private void makeNewMove (Monster monster) {
         Cell target = chooseNextMove(monster);
@@ -79,7 +87,7 @@ public class ThreadMonster implements Runnable{
     private void swapCells (Monster monster, Cell target) {
         monster.getHostCell().actor.compareAndSet(monster,freecell);
         monster.setHostCell(target);
-        LOG.info(String.format("Swap of monster cells succeeded"));
+        LOG.info(String.format("Swap of monster cells succeeded at %s", LocalTime.now()));
     }
 
     /**
@@ -113,8 +121,8 @@ public class ThreadMonster implements Runnable{
     /**
      * Removes cells which have Type.BLOCK from the list .
      * Because of monster can't move to the Type.BLOCK cell.
-     * @param cells
-     * @return
+     * @param cells - list of free cells
+     * @return - list of cells without blocks
      */
     List<Cell> removeBlocks(List<Cell> cells){
         cells.removeIf(cell -> cell.actor.get().getType()==Type.BLOCK);

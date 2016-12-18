@@ -7,5 +7,5 @@ package com.sapashev;
  * @version 1.0
  */
 public enum Type {
-    PLAYER, MONSTER, BLOCK, BOMB, FREECELL;
+    PLAYER, MONSTER, BLOCK, FREECELL
 }
