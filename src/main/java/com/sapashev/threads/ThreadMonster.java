@@ -36,7 +36,11 @@ public class ThreadMonster implements Runnable{
     @Override
     public void run () {
         LOG.info(String.format("ThreadMonster started at %s", LocalTime.now().toString()));
-        monsters.forEach(m -> makeMove(m));
+        try {
+            monsters.forEach(m -> makeMove(m));
+        } catch (Exception e) {
+            LOG.error("Exception", e);
+        }
     }
 
 
@@ -87,7 +91,6 @@ public class ThreadMonster implements Runnable{
     private void swapCells (Monster monster, Cell target) {
         monster.getHostCell().actor.compareAndSet(monster,freecell);
         monster.setHostCell(target);
-        LOG.info(String.format("Swap of monster cells succeeded at %s", LocalTime.now()));
     }
 
     /**
@@ -147,7 +150,7 @@ public class ThreadMonster implements Runnable{
         if(column + 1 < board[0].length) {
             cells.add(board[row][column + 1]);
         }
-        if(row - 1 <= 0) {
+        if(row - 1 >= 0) {
             cells.add(board[row - 1][column]);
         }
         if(row + 1 < board.length){
