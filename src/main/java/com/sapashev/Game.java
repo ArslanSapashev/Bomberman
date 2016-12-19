@@ -79,7 +79,7 @@ public class Game {
         for (int x = 0; x < rows; x++){
             for (int y = 0; y < columns; y++){
                 board[x][y] = new Cell(x,y, freecell);
-                board[x][y].actor.compareAndSet(null, freecell);
+                board[x][y].actor.set(freecell);
             }
         }
         return board;
