@@ -12,10 +12,10 @@ import java.util.concurrent.atomic.AtomicReference;
  * @version 1.0
  */
 public class Cell {
-    public AtomicReference<Actor> actor;
+    public final AtomicReference<Actor> actor;
     private final int row;
     private final int column;
-    private int degree;
+    private volatile int degree;
 
     public Cell(int row, int column, Actor freecell){
         this.actor = new AtomicReference<>(freecell);
